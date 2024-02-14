@@ -20,7 +20,7 @@ class ResourceDescriptorFactory {
         return ResourceDescriptor(
             packageQualifier = ksClassDeclaration.packageName.asString(),
             simpleName = ksClassDeclaration.simpleName.asString(),
-            handlers = resolveHandlers(ksClassDeclaration)
+            handlers = resolveHandlers(ksClassDeclaration).flatten()
         )
     }
 
