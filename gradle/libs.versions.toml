@@ -1,0 +1,14 @@
+[libraries]
+autoservice-ksp = "dev.zacsweers.autoservice:auto-service-ksp:1.1.0"
+autoservice-annotations = "com.google.auto.service:auto-service-annotations:1.1.1"
+ktor-engine-netty = "io.ktor:ktor-server-netty:2.3.5-ktor"
+
+kotlinpoet = "com.squareup:kotlinpoet:1.16.0"
+kotlinpoet-ksp = "com.squareup:kotlinpoet-ksp:1.16.0"
+
+symbol-processing-api = "com.google.devtools.ksp:symbol-processing-api:1.9.10-1.0.13"
+ksp-api = "com.google.devtools.ksp:symbol-processing-api:1.9.21-1.0.15"
+jakarta-ws-rs-api = "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+
+[plugins]
+ksp = { id = "com.google.devtools.ksp", version = "1.9.21-1.0.15" }

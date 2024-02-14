@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
+    alias(libs.plugins.ksp)
 }
 
 group = "io.github.lexadiky.ktor-jax-rs"
@@ -10,7 +11,8 @@ repositories {
 }
 
 dependencies {
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    ksp(projects.kspProcessor)
+    implementation(libs.jakarta.ws.rs.api)
 }
 
 tasks.test {

@@ -1,5 +1,7 @@
 # Ktor JAX-RS
 
+![GitHub License](https://img.shields.io/github/license/lexa-diky/ktor-jax-rs)
+
 [JAX-RS](https://www.oracle.com/technical-resources/articles/java/jax-rs.html)
 support for [Ktor](https://ktor.io) framework.
 
