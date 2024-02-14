@@ -5,13 +5,17 @@ import io.github.lexadiky.kjrs.util.AcceptsSanitizer
 data class HandlerDescriptor(
     val handlerMethod: String,
     val httpMethod: String,
-    val contentType: String,
+    val acceptsContentType: String,
+    val producesContentType: String,
     val parameters: List<HandlerParameterDescriptor>,
 ) {
 
     fun bindingUniqueQualifier(): String {
-        val sanContentType = AcceptsSanitizer.sanitize(contentType)
-        val baseName = "${httpMethod.lowercase()}${handlerMethod.capitalize()}_$sanContentType"
+        val sanAccContentType = AcceptsSanitizer.sanitize(acceptsContentType)
+        val sanProdContentType = AcceptsSanitizer.sanitize(acceptsContentType)
+
+        val baseName =
+            "${httpMethod.lowercase()}${handlerMethod.capitalize()}_${sanAccContentType}_${sanProdContentType}"
 
         if (parameters.isEmpty()) {
             return baseName

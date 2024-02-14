@@ -15,29 +15,43 @@ import jakarta.ws.rs.HttpMethod
 import jakarta.ws.rs.OPTIONS
 import jakarta.ws.rs.POST
 import jakarta.ws.rs.PUT
+import jakarta.ws.rs.Produces
 
 class HandlerDescriptorFactory {
 
     fun create(function: KSFunctionDeclaration): List<HandlerDescriptor> {
         val httpMethods = resolveHttpMethods(function)
-        val contentTypes = resolveContentType(function)
+        val consumesContentTypes = resolveConsumesContentType(function)
+        val producesContentTypes = resolveProducesContentType(function)
 
-        return contentTypes.flatMap { contentType ->
-            httpMethods.map { httpMethod ->
-                HandlerDescriptor(
-                    handlerMethod = function.simpleName.asString(),
-                    httpMethod = httpMethod,
-                    contentType = contentType,
-                    parameters = function.parameters.map(::createParameter)
-                )
+        return producesContentTypes.flatMap { producesContentType ->
+            consumesContentTypes.flatMap { acceptsContentType ->
+                httpMethods.map { httpMethod ->
+                    HandlerDescriptor(
+                        handlerMethod = function.simpleName.asString(),
+                        httpMethod = httpMethod,
+                        acceptsContentType = acceptsContentType,
+                        producesContentType = producesContentType,
+                        parameters = function.parameters.map(::createParameter)
+                    )
+                }
             }
         }
     }
 
-    private fun resolveContentType(function: KSFunctionDeclaration): List<String> {
+    private fun resolveConsumesContentType(function: KSFunctionDeclaration): List<String> {
         val consumesAnnotations = function.getAnnotationsByType(Consumes::class).toList()
         return if (consumesAnnotations.isEmpty()) {
-            listOf("*/*")
+            listOf(DEFAULT_CONTENT_TYPE)
+        } else {
+            consumesAnnotations.flatMap { it.value.toList() }
+        }
+    }
+
+    private fun resolveProducesContentType(function: KSFunctionDeclaration): List<String> {
+        val consumesAnnotations = function.getAnnotationsByType(Produces::class).toList()
+        return if (consumesAnnotations.isEmpty()) {
+            listOf(DEFAULT_CONTENT_TYPE)
         } else {
             consumesAnnotations.flatMap { it.value.toList() }
         }
@@ -63,5 +77,10 @@ class HandlerDescriptorFactory {
             else -> buffer += HttpMethod.GET
         }
         return buffer
+    }
+
+    companion object {
+
+        private const val DEFAULT_CONTENT_TYPE = "*/*"
     }
 }
