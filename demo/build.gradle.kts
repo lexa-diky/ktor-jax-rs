@@ -13,6 +13,7 @@ repositories {
 dependencies {
     ksp(projects.kspProcessor)
     implementation(libs.jakarta.ws.rs.api)
+    implementation(libs.ktor.engine.netty)
 }
 
 tasks.test {

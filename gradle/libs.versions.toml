@@ -1,7 +1,8 @@
 [libraries]
 autoservice-ksp = "dev.zacsweers.autoservice:auto-service-ksp:1.1.0"
 autoservice-annotations = "com.google.auto.service:auto-service-annotations:1.1.1"
-ktor-engine-netty = "io.ktor:ktor-server-netty:2.3.5-ktor"
+
+ktor-engine-netty = "io.ktor:ktor-server-netty:2.3.5"
 
 kotlinpoet = "com.squareup:kotlinpoet:1.16.0"
 kotlinpoet-ksp = "com.squareup:kotlinpoet-ksp:1.16.0"
