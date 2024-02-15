@@ -5,6 +5,19 @@
 [JAX-RS](https://www.oracle.com/technical-resources/articles/java/jax-rs.html)
 support for [Ktor](https://ktor.io) framework.
 
+## Getting started
+
+### Add KSP dependency
+```kotlin
+repositories {
+    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+}
+
+dependencies {
+    ksp("io.github.lexa-diky.ktor-jax-rs:ksp-processor:0.0.4-SNAPSHOT")
+}
+```
+
 ## Features
 - 🚀 Fast, no runtime reflection 
 - 🪄 Plug & Play, no complex setup required
