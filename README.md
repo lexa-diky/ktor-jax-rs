@@ -50,8 +50,7 @@ public class EchoControllerJaxRsGenerated(
                         handlers.echo(
                             body = call.receive(),
                             text = call.parameters.getOrFail("text"),
-                            customHeader =
-                                    call.request.queryParameters.getOrFail("X-MY-CUSTOM-HEADER"),
+                            customHeader = call.request.queryParameters.getOrFail("X-MY-CUSTOM-HEADER"),
                         )
                     }
                 }
