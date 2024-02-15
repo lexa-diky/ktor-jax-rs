@@ -9,9 +9,11 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import io.github.lexadiky.kjrs.KtorJaxRsConfig
 import io.github.lexadiky.kjrs.descriptor.HandlerDescriptor
+import io.github.lexadiky.kjrs.descriptor.HandlerDescriptorFactory.Companion.DEFAULT_CONTENT_TYPE
 import io.github.lexadiky.kjrs.descriptor.HandlerParameterDescriptor
 import io.github.lexadiky.kjrs.descriptor.ResourceDescriptor
 import io.github.lexadiky.kjrs.descriptor.groupByMethodGroup
+import io.github.lexadiky.kjrs.util.withControlFlow
 
 class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
     private val pathRenderer = PathRenderer()
@@ -88,26 +90,40 @@ class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
         val bodyBuilder = CodeBlock.builder()
 
         handlers.forEach { handler ->
-            bodyBuilder.beginControlFlow("route.route(%S)", pathRenderer.render(handler.path))
-                .beginControlFlow("method(HttpMethod(%S))", handler.httpMethod)
-                .beginControlFlow("accept(ContentType.parse(%S))", handler.acceptsContentType)
-                .beginControlFlow("handle")
-                .addStatement("%L.%L(", "handlers", handler.handlerMethod)
-                .indent()
+            bodyBuilder.withControlFlow("with(route)") {
+                bodyBuilder.withControlFlow(
+                    "route(%S)",
+                    pathRenderer.render(handler.path),
+                    condition = handler.path.nodes.isNotEmpty()
+                ) {
+                    bodyBuilder.withControlFlow(
+                        "method(HttpMethod(%S))",
+                        handler.httpMethod
+                    ) {
+                        bodyBuilder.withControlFlow(
+                            "accept(ContentType.parse(%S))",
+                            handler.acceptsContentType,
+                            condition = handler.acceptsContentType != DEFAULT_CONTENT_TYPE
+                        ) {
+                            bodyBuilder.withControlFlow("handle") {
+                                bodyBuilder
+                                    .addStatement("%L.%L(", "handlers", handler.handlerMethod)
+                                    .indent()
 
-            handler.parameters.forEach { parameter ->
-                bodyBuilder.add("%L = ", parameter.alias) // TODO
-                bodyBuilder.add(renderParameter(parameter))
-                bodyBuilder.add(",\n")
+                                handler.parameters.forEach { parameter ->
+                                    bodyBuilder.add("%L = ", parameter.alias)
+                                    bodyBuilder.add(renderParameter(parameter))
+                                    bodyBuilder.add(",\n")
+                                }
+
+                                bodyBuilder
+                                    .unindent()
+                                    .addStatement(")")
+                            }
+                        }
+                    }
+                }
             }
-
-            bodyBuilder
-                .unindent()
-                .addStatement(")")
-                .endControlFlow()
-                .endControlFlow()
-                .endControlFlow()
-                .endControlFlow()
         }
 
         builder.addCode(bodyBuilder.build())
@@ -118,7 +134,11 @@ class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
         return when (parameter) {
             is HandlerParameterDescriptor.Body -> CodeBlock.of("call.receive()")
             is HandlerParameterDescriptor.Path -> CodeBlock.of("call.parameters.getOrFail(%S)", parameter.key)
-            is HandlerParameterDescriptor.Query -> CodeBlock.of("call.request.queryParameters.getOrFail(%S)", parameter.key)
+            is HandlerParameterDescriptor.Query -> CodeBlock.of(
+                "call.request.queryParameters.getOrFail(%S)",
+                parameter.key
+            )
+
             is HandlerParameterDescriptor.Header -> CodeBlock.of("call.request.headers[%S]!!", parameter.key)
         }
     }

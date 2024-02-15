@@ -141,6 +141,6 @@ class HandlerDescriptorFactory {
 
     companion object {
 
-        private const val DEFAULT_CONTENT_TYPE = "*/*"
+        const val DEFAULT_CONTENT_TYPE = "*/*"
     }
 }

@@ -16,11 +16,8 @@ class EchoController {
 
     @GET
     @POST
-    @Path("/{text}")
-    @Consumes("application/json")
     suspend fun echo(
         body: UUID,
-        @PathParam("text") text: String,
         @HeaderParam("X-MY-CUSTOM-HEADER") customHeader: String
     ) {
 
