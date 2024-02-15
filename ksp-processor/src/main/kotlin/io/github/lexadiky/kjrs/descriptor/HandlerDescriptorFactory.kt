@@ -124,18 +124,31 @@ class HandlerDescriptorFactory {
 
     private fun resolveHttpMethods(function: KSFunctionDeclaration): List<String> {
         val buffer = ArrayList<String>()
-        when {
-            function.isAnnotationPresent(GET::class) -> buffer += HttpMethod.GET
-            function.isAnnotationPresent(POST::class) -> buffer += HttpMethod.POST
-            function.isAnnotationPresent(PUT::class) -> buffer += HttpMethod.PUT
-            function.isAnnotationPresent(DELETE::class) -> buffer += HttpMethod.DELETE
-            function.isAnnotationPresent(HEAD::class) -> buffer += HttpMethod.HEAD
-            function.isAnnotationPresent(OPTIONS::class) -> buffer += HttpMethod.OPTIONS
-            function.isAnnotationPresent(HttpMethod::class) ->
-                buffer += function.getAnnotationsByType(HttpMethod::class).map { it.value }
-
-            else -> buffer += HttpMethod.GET
+        if (function.isAnnotationPresent(GET::class)){
+            buffer += HttpMethod.GET
         }
+        if (function.isAnnotationPresent(POST::class)){
+            buffer += HttpMethod.POST
+        }
+        if (function.isAnnotationPresent(PUT::class)) {
+            buffer += HttpMethod.PUT
+        }
+        if (function.isAnnotationPresent(DELETE::class)) {
+            buffer += HttpMethod.DELETE
+        }
+        if (function.isAnnotationPresent(HEAD::class)){
+            buffer += HttpMethod.HEAD
+        }
+        if (function.isAnnotationPresent(OPTIONS::class)){
+            buffer += HttpMethod.OPTIONS
+        }
+        if (function.isAnnotationPresent(HttpMethod::class)) {
+            buffer += function.getAnnotationsByType(HttpMethod::class).map { it.value }
+        }
+        if (buffer.isEmpty()) {
+            buffer += HttpMethod.GET
+        }
+
         return buffer
     }
 
