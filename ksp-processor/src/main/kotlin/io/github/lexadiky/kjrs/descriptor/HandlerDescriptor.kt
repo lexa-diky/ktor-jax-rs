@@ -7,22 +7,15 @@ data class HandlerDescriptor(
     val httpMethod: String,
     val acceptsContentType: String,
     val producesContentType: String,
+    val path: PathDescriptor,
     val parameters: List<HandlerParameterDescriptor>,
 ) {
 
-    fun bindingUniqueQualifier(): String {
-        val sanAccContentType = AcceptsSanitizer.sanitize(acceptsContentType)
-        val sanProdContentType = AcceptsSanitizer.sanitize(acceptsContentType)
-
-        val baseName =
-            "${httpMethod.lowercase()}${handlerMethod.capitalize()}_${sanAccContentType}_${sanProdContentType}"
-
-        if (parameters.isEmpty()) {
-            return baseName
-        }
-
-
-        val parameterAliases = parameters.joinToString(separator = "_") { it.alias }
-        return "${baseName}_$parameterAliases"
+    fun methodGroupQualifier(): String {
+        return handlerMethod
     }
+}
+
+fun List<HandlerDescriptor>.groupByMethodGroup(): Map<String, List<HandlerDescriptor>> {
+    return groupBy { it.methodGroupQualifier() }
 }

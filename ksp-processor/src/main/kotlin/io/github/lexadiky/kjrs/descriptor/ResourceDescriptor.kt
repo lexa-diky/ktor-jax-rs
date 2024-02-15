@@ -5,7 +5,8 @@ import io.github.lexadiky.kjrs.KtorJaxRsConfig
 data class ResourceDescriptor(
     val packageQualifier: String,
     val simpleName: String,
-    val handlers: List<HandlerDescriptor>
+    val handlers: List<HandlerDescriptor>,
+    val path: PathDescriptor
 ) {
     val qualifier = "$packageQualifier.$simpleName"
 
