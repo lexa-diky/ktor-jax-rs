@@ -2,7 +2,7 @@ package io.github.lexadiky.kjrs.descriptor
 
 import io.github.lexadiky.kjrs.util.AcceptsSanitizer
 
-data class HandlerDescriptor(
+internal data class HandlerDescriptor(
     val handlerMethod: String,
     val httpMethod: String,
     val acceptsContentType: String,

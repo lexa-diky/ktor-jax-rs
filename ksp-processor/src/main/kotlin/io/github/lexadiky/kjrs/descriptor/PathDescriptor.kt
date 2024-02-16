@@ -1,6 +1,6 @@
 package io.github.lexadiky.kjrs.descriptor
 
-data class PathDescriptor(
+internal data class PathDescriptor(
     val nodes: List<Node>
 ) {
 

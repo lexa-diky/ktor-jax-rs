@@ -21,7 +21,7 @@ import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 
-class HandlerDescriptorFactory {
+internal class HandlerDescriptorFactory {
     private val pathDescriptorFactory = PathDescriptorFactory()
 
     fun create(function: KSFunctionDeclaration): List<HandlerDescriptor> {

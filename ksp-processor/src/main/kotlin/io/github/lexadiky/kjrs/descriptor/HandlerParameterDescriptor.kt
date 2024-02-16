@@ -1,6 +1,6 @@
 package io.github.lexadiky.kjrs.descriptor
 
-sealed interface HandlerParameterDescriptor {
+internal sealed interface HandlerParameterDescriptor {
 
     val alias: String
 
