@@ -16,6 +16,6 @@ internal data class HandlerDescriptor(
     }
 }
 
-internal fun List<HandlerDescriptor>.groupByMethodGroup(): Map<String, List<HandlerDescriptor>> {
+fun List<HandlerDescriptor>.groupByMethodGroup(): Map<String, List<HandlerDescriptor>> {
     return groupBy { it.methodGroupQualifier() }
 }

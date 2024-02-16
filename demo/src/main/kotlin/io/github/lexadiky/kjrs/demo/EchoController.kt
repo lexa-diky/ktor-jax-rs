@@ -11,9 +11,6 @@ import jakarta.ws.rs.Produces
 import jakarta.ws.rs.QueryParam
 import java.util.UUID
 
-/**
- * My very good documentation
- */
 @Path("/echo")
 class EchoController {
 
