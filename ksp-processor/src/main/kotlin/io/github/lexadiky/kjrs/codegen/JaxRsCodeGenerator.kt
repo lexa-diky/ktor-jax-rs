@@ -37,6 +37,10 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
             .primaryConstructor(generateConstructor(resource))
             .addProperty(generateHandlerProperty(resource))
 
+        if (resource.kdoc != null) {
+            builder.addKdoc(resource.kdoc)
+        }
+
         resource.handlers.groupByMethodGroup()
             .map { (groupName, descriptors) -> generateBindingFunctionForGroup(groupName, descriptors) }
             .forEach(builder::addFunction)

@@ -12,13 +12,8 @@ import io.ktor.server.routing.routing
 fun main() {
     embeddedServer(Netty) {
         routing {
-            val a: Routing = this
-            this.route("/") {
-                get {
-                    call.receive()
-                }
-            }
+
         }
-    }
+    }.start(wait = true)
 }
 

@@ -24,7 +24,8 @@ internal class ResourceDescriptorFactory {
             packageQualifier = ksClassDeclaration.packageName.asString(),
             simpleName = ksClassDeclaration.simpleName.asString(),
             handlers = resolveHandlers(ksClassDeclaration).flatten(),
-            path = resolvePath(ksClassDeclaration)
+            path = resolvePath(ksClassDeclaration),
+            kdoc = ksClassDeclaration.docString
         )
     }
 

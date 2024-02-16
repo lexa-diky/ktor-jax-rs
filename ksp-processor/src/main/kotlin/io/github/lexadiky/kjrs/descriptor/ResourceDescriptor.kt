@@ -6,7 +6,8 @@ internal data class ResourceDescriptor(
     val packageQualifier: String,
     val simpleName: String,
     val handlers: List<HandlerDescriptor>,
-    val path: PathDescriptor
+    val path: PathDescriptor,
+    val kdoc: String?
 ) {
     val qualifier = "$packageQualifier.$simpleName"
 
