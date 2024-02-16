@@ -15,7 +15,7 @@ import io.github.lexadiky.kjrs.descriptor.ResourceDescriptor
 import io.github.lexadiky.kjrs.descriptor.groupByMethodGroup
 import io.github.lexadiky.kjrs.util.withControlFlow
 
-internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
+class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
     private val pathRenderer = PathRenderer()
 
     fun generate(resource: ResourceDescriptor): FileSpec {

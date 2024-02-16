@@ -2,7 +2,7 @@ package io.github.lexadiky.kjrs.descriptor
 
 import io.github.lexadiky.kjrs.KtorJaxRsConfig
 
-internal data class ResourceDescriptor(
+data class ResourceDescriptor(
     val packageQualifier: String,
     val simpleName: String,
     val handlers: List<HandlerDescriptor>,

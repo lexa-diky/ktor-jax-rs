@@ -1,6 +1,6 @@
 package io.github.lexadiky.kjrs.descriptor
 
-internal class PathDescriptorFactory {
+class PathDescriptorFactory {
 
     fun create(rawPath: String): PathDescriptor {
         if (rawPath.isEmpty()) {

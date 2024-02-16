@@ -15,7 +15,7 @@ import jakarta.ws.rs.POST
 import jakarta.ws.rs.PUT
 import jakarta.ws.rs.Path
 
-internal class ResourceDescriptorFactory {
+class ResourceDescriptorFactory {
     private val handlerDescriptorFactory = HandlerDescriptorFactory()
     private val pathDescriptorFactory = PathDescriptorFactory()
 
