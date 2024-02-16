@@ -12,7 +12,7 @@ import io.github.lexadiky.kjrs.descriptor.ResourceDescriptorFactory
 import jakarta.ws.rs.Path
 import kotlin.math.log
 
-class KtorJaxRsSymbolProcessor(
+internal class KtorJaxRsSymbolProcessor(
     private val logger: KSPLogger,
     private val codeGenerator: CodeGenerator,
     ktorJaxRsConfig: KtorJaxRsConfig

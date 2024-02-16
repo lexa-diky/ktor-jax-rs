@@ -2,7 +2,7 @@ package io.github.lexadiky.kjrs.codegen
 
 import com.squareup.kotlinpoet.ClassName
 
-object ClassQualifierLibrary {
+internal object ClassQualifierLibrary {
     val ktorRouting = ClassName.bestGuess("io.ktor.server.routing.Routing")
     val ktorRoute = ClassName.bestGuess("io.ktor.server.routing.Route")
     val ktorRouteFn = ClassName("io.ktor.server.routing", "route")
