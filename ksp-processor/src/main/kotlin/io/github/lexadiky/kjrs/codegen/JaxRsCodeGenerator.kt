@@ -12,6 +12,7 @@ import io.github.lexadiky.kjrs.descriptor.HandlerDescriptor
 import io.github.lexadiky.kjrs.descriptor.HandlerDescriptorFactory.Companion.DEFAULT_CONTENT_TYPE
 import io.github.lexadiky.kjrs.descriptor.HandlerParameterDescriptor
 import io.github.lexadiky.kjrs.descriptor.ResourceDescriptor
+import io.github.lexadiky.kjrs.descriptor.ResponseDescriptor
 import io.github.lexadiky.kjrs.descriptor.groupByMethodGroup
 import io.github.lexadiky.kjrs.util.withControlFlow
 
@@ -111,7 +112,7 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
                         ) {
                             bodyBuilder.withControlFlow("handle") {
                                 bodyBuilder
-                                    .addStatement("%L.%L(", "handlers", handler.handlerMethod)
+                                    .addStatement("val body = %L.%L(", "handlers", handler.handlerMethod)
                                     .indent()
 
                                 handler.parameters.forEach { parameter ->
@@ -123,6 +124,8 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
                                 bodyBuilder
                                     .unindent()
                                     .addStatement(")")
+
+                                bodyBuilder.add(generateResponseStatement(handler))
                             }
                         }
                     }
@@ -132,6 +135,14 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
 
         builder.addCode(bodyBuilder.build())
         return builder.build()
+    }
+
+    private fun generateResponseStatement(handler: HandlerDescriptor): CodeBlock {
+        return when (handler.response) {
+            ResponseDescriptor.AnyObject -> CodeBlock.of("call.respond(body)")
+            ResponseDescriptor.JaxRsResponse -> TODO()
+            ResponseDescriptor.Unit -> TODO()
+        }
     }
 
     private fun renderParameter(parameter: HandlerParameterDescriptor): CodeBlock {
@@ -163,5 +174,6 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
             .addClassImport(ClassQualifierLibrary.ktorBodyReceiveFn)
             .addClassImport(ClassQualifierLibrary.ktorContentType)
             .addClassImport(ClassQualifierLibrary.ktorAcceptFn)
+            .addClassImport(ClassQualifierLibrary.ktorRespondFn)
     }
 }

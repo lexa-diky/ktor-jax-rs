@@ -18,8 +18,7 @@ class EchoController {
     suspend fun echo(
         body: UUID,
         @HeaderParam("X-MY-CUSTOM-HEADER") customHeader: String
-    ): Response {
-        return Response.ok()
-            .build()
+    ): Map<String, String> {
+        return mapOf("a" to "b")
     }
 }

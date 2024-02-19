@@ -13,4 +13,5 @@ internal object ClassQualifierLibrary {
     val ktorAcceptFn = ClassName("io.ktor.server.routing", "accept")
     val ktorHttpMethod = ClassName.bestGuess("io.ktor.http.HttpMethod")
     val ktorContentType = ClassName.bestGuess("io.ktor.http.ContentType")
+    val ktorRespondFn = ClassName("io.ktor.server.response", "respond")
 }
