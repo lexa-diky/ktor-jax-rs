@@ -7,6 +7,7 @@ import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSValueParameter
+import com.squareup.kotlinpoet.ClassName
 import jakarta.ws.rs.Consumes
 import jakarta.ws.rs.DELETE
 import jakarta.ws.rs.GET
@@ -28,6 +29,7 @@ internal class HandlerDescriptorFactory {
         val httpMethods = resolveHttpMethods(function)
         val consumesContentTypes = resolveConsumesContentType(function)
         val producesContentTypes = resolveProducesContentType(function)
+        val response = resolveResponse(function)
 
         val parameters = function.parameters.map(::createParameter)
         require(parameters.count { it is HandlerParameterDescriptor.Body } <= 1) {
@@ -43,10 +45,21 @@ internal class HandlerDescriptorFactory {
                         acceptsContentType = acceptsContentType,
                         producesContentType = producesContentType,
                         path = resolvePath(function),
-                        parameters = parameters
+                        parameters = parameters,
+                        response = response
                     )
                 }
             }
+        }
+    }
+
+    private fun resolveResponse(function: KSFunctionDeclaration): ResponseDescriptor {
+        val returnType = function.returnType?.resolve() ?: return ResponseDescriptor.Unit
+
+        return when(returnType.declaration.qualifiedName?.asString()) {
+            KOTLIN_UNIT_QUALIFIED_NAME -> ResponseDescriptor.Unit
+            JAX_RS_RESPONSE_QUALIFIED_NAME -> ResponseDescriptor.JaxRsResponse
+            else -> ResponseDescriptor.AnyObject
         }
     }
 
@@ -154,6 +167,8 @@ internal class HandlerDescriptorFactory {
 
     companion object {
 
+        const val JAX_RS_RESPONSE_QUALIFIED_NAME = "jakarta.ws.rs.core.Response"
+        const val KOTLIN_UNIT_QUALIFIED_NAME = "kotlin.Unit"
         const val DEFAULT_CONTENT_TYPE = "*/*"
     }
 }

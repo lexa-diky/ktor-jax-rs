@@ -1,7 +1,5 @@
 package io.github.lexadiky.kjrs.descriptor
 
-import io.github.lexadiky.kjrs.util.AcceptsSanitizer
-
 internal data class HandlerDescriptor(
     val handlerMethod: String,
     val httpMethod: String,
@@ -9,6 +7,7 @@ internal data class HandlerDescriptor(
     val producesContentType: String,
     val path: PathDescriptor,
     val parameters: List<HandlerParameterDescriptor>,
+    val response: ResponseDescriptor
 ) {
 
     fun methodGroupQualifier(): String {
