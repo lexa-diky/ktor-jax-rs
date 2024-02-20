@@ -18,6 +18,7 @@ import io.github.lexadiky.kjrs.util.withControlFlow
 
 internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
     private val pathRenderer = PathRenderer()
+    private val preludeCodeGenerator = PreludeCodeGenerator()
 
     fun generate(resource: ResourceDescriptor): FileSpec {
         return FileSpec.builder(
@@ -37,6 +38,7 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
             .addFunction(generateRootBindingFunction(resource))
             .primaryConstructor(generateConstructor(resource))
             .addProperty(generateHandlerProperty(resource))
+            .apply { preludeCodeGenerator.addJaxRsPrelude(this) }
 
         if (resource.kdoc != null) {
             builder.addKdoc(resource.kdoc)
@@ -140,7 +142,7 @@ internal class JaxRsCodeGenerator(private val config: KtorJaxRsConfig) {
     private fun generateResponseStatement(handler: HandlerDescriptor): CodeBlock {
         return when (handler.response) {
             ResponseDescriptor.AnyObject -> CodeBlock.of("call.respond(body)")
-            ResponseDescriptor.JaxRsResponse -> TODO()
+            ResponseDescriptor.JaxRsResponse -> CodeBlock.of("call.respondJaxRs(body)")
             ResponseDescriptor.Unit -> TODO()
         }
     }

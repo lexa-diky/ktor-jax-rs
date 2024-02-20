@@ -6,4 +6,4 @@ plugins {
 
 rootProject.name = "ktor-jax-rs"
 
-include(":ksp-processor", ":demo")
+include(":ksp-processor", ":demo", ":runtime")

@@ -11,9 +11,15 @@ repositories {
 }
 
 dependencies {
+    implementation(projects.runtime)
     ksp(projects.kspProcessor)
+
     implementation(libs.jakarta.ws.rs.api)
+    implementation(libs.logback)
     implementation(libs.ktor.engine.netty)
+    implementation(libs.ktor.plugin.serialization.json)
+    implementation(libs.ktor.plugin.contentNegotiation)
+    implementation(libs.ktor.plugin.logging)
 }
 
 tasks.test {

@@ -1,5 +1,7 @@
 package io.github.lexadiky.kjrs.demo
 
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.response.respond
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.HeaderParam
 import jakarta.ws.rs.POST
@@ -15,10 +17,12 @@ class EchoController {
 
     @GET
     @POST
-    suspend fun echo(
-        body: UUID,
-        @HeaderParam("X-MY-CUSTOM-HEADER") customHeader: String
-    ): Map<String, String> {
-        return mapOf("a" to "b")
+    suspend fun echo(): Response {
+        val response = Response.ok(mapOf("a" to "b"))
+            .build()
+
+        return response
     }
+
+
 }

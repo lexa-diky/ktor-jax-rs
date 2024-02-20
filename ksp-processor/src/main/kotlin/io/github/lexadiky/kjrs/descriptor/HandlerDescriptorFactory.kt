@@ -59,6 +59,7 @@ internal class HandlerDescriptorFactory {
         return when(returnType.declaration.qualifiedName?.asString()) {
             KOTLIN_UNIT_QUALIFIED_NAME -> ResponseDescriptor.Unit
             JAX_RS_RESPONSE_QUALIFIED_NAME -> ResponseDescriptor.JaxRsResponse
+            JAX_RS_RESPONSE_BUILDER_QUALIFIED_NAME -> error("returning response builder is not allowed")
             else -> ResponseDescriptor.AnyObject
         }
     }
@@ -168,6 +169,7 @@ internal class HandlerDescriptorFactory {
     companion object {
 
         const val JAX_RS_RESPONSE_QUALIFIED_NAME = "jakarta.ws.rs.core.Response"
+        const val JAX_RS_RESPONSE_BUILDER_QUALIFIED_NAME = "jakarta.ws.rs.core.Response.ResponseBuilder"
         const val KOTLIN_UNIT_QUALIFIED_NAME = "kotlin.Unit"
         const val DEFAULT_CONTENT_TYPE = "*/*"
     }
