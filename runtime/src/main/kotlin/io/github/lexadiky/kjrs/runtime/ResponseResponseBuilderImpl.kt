@@ -12,21 +12,26 @@ import java.net.URI
 import java.util.Date
 import java.util.Locale
 
-class ResponseResponseBuilderImpl : Response.ResponseBuilder() {
-    private var entity: Any? = null
-    private var statusCode: Int = 200
-    private var statusReasonPhrase: String? = null
+data class ResponseResponseBuilderImpl internal constructor(
+    private var entity: Any? = null,
+    private var statusCode: Int = 200,
+    private var statusReasonPhrase: String? = null,
+    private var headers: Map<String, List<Any>> = emptyMap(),
+    private var language: Locale? = null
+) : Response.ResponseBuilder() {
 
     override fun build(): Response {
         return ResponseImpl(
             entity = entity,
             statusCode = statusCode,
-            statusReasonPhrase = statusReasonPhrase
+            statusReasonPhrase = statusReasonPhrase,
+            headers = headers,
+            language = language
         )
     }
 
     override fun clone(): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+        return copy()
     }
 
     override fun status(code: Int): Response.ResponseBuilder = apply {
@@ -62,20 +67,30 @@ class ResponseResponseBuilderImpl : Response.ResponseBuilder() {
         TODO("Not yet implemented")
     }
 
-    override fun header(p0: String?, p1: Any?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun header(header: String?, value: Any?): Response.ResponseBuilder {
+        if (header == null || value == null) {
+            return this
+        }
+
+        val mm = headers.toMutableMap()
+        val buff = mm.getOrDefault(header, emptyList())
+
+        mm[header] = buff + value
+
+        this.headers = mm
+        return this
     }
 
     override fun replaceAll(p0: MultivaluedMap<String, Any>?): Response.ResponseBuilder {
         TODO("Not yet implemented")
     }
 
-    override fun language(p0: String?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun language(language: String?): Response.ResponseBuilder = apply {
+        this.language = Locale.forLanguageTag(language)
     }
 
-    override fun language(p0: Locale?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun language(locale: Locale?): Response.ResponseBuilder = apply {
+        this.language = locale
     }
 
     override fun type(p0: MediaType?): Response.ResponseBuilder {

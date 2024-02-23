@@ -14,7 +14,9 @@ import java.util.Locale
 class ResponseImpl(
     private val entity: Any?,
     private val statusCode: Int,
-    private val statusReasonPhrase: String?
+    private val statusReasonPhrase: String?,
+    private val headers: Map<String, List<Any>>,
+    private val language: Locale?
 ) : Response() {
 
     override fun close() {
