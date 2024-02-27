@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.MultivaluedMap
 import jakarta.ws.rs.core.NewCookie
 import jakarta.ws.rs.core.Response
 import jakarta.ws.rs.core.Variant
+import jakarta.ws.rs.ext.RuntimeDelegate
 import java.net.URI
 import java.util.Date
 import java.util.Locale
@@ -17,7 +18,10 @@ data class ResponseResponseBuilderImpl internal constructor(
     private var statusCode: Int = 200,
     private var statusReasonPhrase: String? = null,
     private var headers: Map<String, List<Any>> = emptyMap(),
-    private var language: Locale? = null
+    private var language: Locale? = null,
+    private var mediaType: MediaType? = null,
+    private var expires: Date? = null,
+    private var entityTag: EntityTag? = null
 ) : Response.ResponseBuilder() {
 
     override fun build(): Response {
@@ -81,8 +85,17 @@ data class ResponseResponseBuilderImpl internal constructor(
         return this
     }
 
-    override fun replaceAll(p0: MultivaluedMap<String, Any>?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun replaceAll(headers: MultivaluedMap<String, Any>?): Response.ResponseBuilder {
+        if (headers == null) {
+            this.headers = emptyMap()
+        }
+
+        val buff = HashMap<String, List<Any>>()
+        headers?.forEach { (key, values) ->
+            buff[key] = values
+        }
+        this.headers = buff
+        return this
     }
 
     override fun language(language: String?): Response.ResponseBuilder = apply {
@@ -93,12 +106,12 @@ data class ResponseResponseBuilderImpl internal constructor(
         this.language = locale
     }
 
-    override fun type(p0: MediaType?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun type(mediaType: MediaType?): Response.ResponseBuilder = apply {
+        this.mediaType = mediaType
     }
 
-    override fun type(p0: String?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun type(mediaTypeStr: String?): Response.ResponseBuilder = apply {
+        this.mediaType = mediaType?.let { MediaType.valueOf(mediaTypeStr) }
     }
 
     override fun variant(p0: Variant?): Response.ResponseBuilder {
@@ -113,8 +126,8 @@ data class ResponseResponseBuilderImpl internal constructor(
         TODO("Not yet implemented")
     }
 
-    override fun expires(p0: Date?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun expires(expires: Date?): Response.ResponseBuilder = apply {
+        this.expires = expires
     }
 
     override fun lastModified(p0: Date?): Response.ResponseBuilder {
@@ -125,12 +138,16 @@ data class ResponseResponseBuilderImpl internal constructor(
         TODO("Not yet implemented")
     }
 
-    override fun tag(p0: EntityTag?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun tag(etag: EntityTag?): Response.ResponseBuilder = apply {
+        this.entityTag = etag
     }
 
-    override fun tag(p0: String?): Response.ResponseBuilder {
-        TODO("Not yet implemented")
+    override fun tag(etag: String?): Response.ResponseBuilder = apply {
+        this.entityTag = etag?.let {
+            RuntimeDelegate.getInstance()
+                .createHeaderDelegate(EntityTag::class.java)
+                .fromString(it)
+        }
     }
 
     override fun variants(vararg p0: Variant?): Response.ResponseBuilder {
